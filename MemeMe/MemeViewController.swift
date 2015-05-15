@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, UIImagePickerControllerDelegate,
+class MemeViewController: UIViewController, UIImagePickerControllerDelegate,
 UINavigationControllerDelegate, UITextFieldDelegate {
     
     @IBOutlet weak var imagePickerView: UIImageView!
@@ -20,7 +20,7 @@ UINavigationControllerDelegate, UITextFieldDelegate {
         NSStrokeColorAttributeName : UIColor.blackColor(),
         NSForegroundColorAttributeName : UIColor.whiteColor(),
         NSFontAttributeName : UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)!,
-        NSStrokeWidthAttributeName : 0
+        NSStrokeWidthAttributeName : -2
     ];
     
     override func viewDidLoad() {
@@ -93,6 +93,29 @@ UINavigationControllerDelegate, UITextFieldDelegate {
         imagePicker.sourceType = UIImagePickerControllerSourceType.Camera
         
         self.presentViewController(imagePicker, animated: true, completion: nil)
+    }
+ 
+    func save() {
+        //Create the meme
+        let memeImage = generateMemedImage()
+        var meme = Meme( textFieldTop: topTextField.text!, textFieldBottom: bottomTextField.text!, image: imagePickerView.image!, memeImage: memeImage)
+    }
+ 
+    func generateMemedImage() -> UIImage {
+        
+        // TODO: Hide toolbar and navbar
+        
+        // Render view to an image
+        UIGraphicsBeginImageContext(self.view.frame.size)
+        self.view.drawViewHierarchyInRect(self.view.frame,
+            afterScreenUpdates: true)
+        let memedImage : UIImage =
+        UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        // TODO:  Show toolbar and navbar
+        
+        return memedImage
     }
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
