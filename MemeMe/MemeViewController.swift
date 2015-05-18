@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  MemeViewController.swift
 //  MemeMe
 //
 //  Created by Joe White on 5/7/15.
@@ -22,10 +22,20 @@ UINavigationControllerDelegate, UITextFieldDelegate {
         NSFontAttributeName : UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)!,
         NSStrokeWidthAttributeName : -2
     ];
+
+    var memes: [Meme]!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
+        //meme data
+        let object = UIApplication.sharedApplication().delegate
+        let appDelegate = object as! AppDelegate
+        memes = appDelegate.memes
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        //style top and bottom text
         self.topTextField.attributedPlaceholder = NSAttributedString(string:"TOP",
             attributes:[NSForegroundColorAttributeName: UIColor.whiteColor()])
         
@@ -38,9 +48,8 @@ UINavigationControllerDelegate, UITextFieldDelegate {
         
         self.topTextField.delegate = self
         self.bottomTextField.delegate = self
-    }
-    
-    override func viewWillAppear(animated: Bool) {
+        
+        //enable camera button if it is available
         cameraButton.enabled = UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)
         super.viewWillAppear(animated)
         self.subscribeToKeyboardNotifications()
@@ -79,6 +88,7 @@ UINavigationControllerDelegate, UITextFieldDelegate {
         return keyboardSize.CGRectValue().height
     }
     
+    //Allow image picker from album
     @IBAction func pickAnImageFromAlbum (sender: AnyObject) {
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
@@ -87,6 +97,7 @@ UINavigationControllerDelegate, UITextFieldDelegate {
         self.presentViewController(imagePicker, animated: true, completion: nil)
     }
     
+    //Image picker from camera roll
     @IBAction func pickAnImageFromCamera (sender: AnyObject) {
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
@@ -98,7 +109,12 @@ UINavigationControllerDelegate, UITextFieldDelegate {
     func save() {
         //Create the meme
         let memeImage = generateMemedImage()
-        var meme = Meme( textFieldTop: topTextField.text!, textFieldBottom: bottomTextField.text!, image: imagePickerView.image!, memeImage: memeImage)
+        var meme = Meme( textFieldTop: self.topTextField.text, textFieldBottom: self.bottomTextField.text, image: imagePickerView.image!, memeImage: memeImage)
+
+        // Add it to the memes array in the Application Delegate
+        let object = UIApplication.sharedApplication().delegate
+        let appDelegate = object as! AppDelegate
+        appDelegate.memes.append(meme)
     }
  
     func generateMemedImage() -> UIImage {
@@ -125,7 +141,7 @@ UINavigationControllerDelegate, UITextFieldDelegate {
         }
     }
     
-    func textFieldDidBeginEditing(textField: UITextField!) {
+    func textFieldDidBeginEditing(textField: UITextField) {
         textField.placeholder = nil;
     }
     
@@ -136,6 +152,30 @@ UINavigationControllerDelegate, UITextFieldDelegate {
         
         self.view.endEditing(true)
         return false
+    }
+    
+    //Upon cancel of meme add show tab view controller
+    @IBAction func cancelClick(sender: AnyObject) {
+        var tabController: UITabBarController
+        tabController = self.storyboard?.instantiateViewControllerWithIdentifier("memeTabView") as! UITabBarController
+        self.presentViewController(tabController, animated: true, completion: nil)
+    }
+    
+    //Show activity view controller and save meme and display tab view controller
+    @IBAction func actionClick(sender: AnyObject) {
+        let meme = self.generateMemedImage()
+        let activityController = UIActivityViewController(activityItems: [meme], applicationActivities: nil)
+        
+        activityController.completionWithItemsHandler = {
+            (s: String!, ok: Bool, items: [AnyObject]!, err:NSError!) -> Void in
+            self.save()
+
+            var tabController: UITabBarController
+            tabController = self.storyboard?.instantiateViewControllerWithIdentifier("memeTabView") as! UITabBarController
+            self.presentViewController(tabController, animated: true, completion: nil)
+        }
+        
+        self.presentViewController(activityController, animated:true, completion:nil)
     }
 }
 

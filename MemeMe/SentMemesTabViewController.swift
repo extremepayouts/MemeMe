@@ -14,5 +14,4 @@ class SentMemesTabViewController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-    
 }
