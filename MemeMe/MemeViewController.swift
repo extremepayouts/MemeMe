@@ -34,6 +34,14 @@ UINavigationControllerDelegate, UITextFieldDelegate {
         let object = UIApplication.sharedApplication().delegate
         let appDelegate = object as! AppDelegate
         memes = appDelegate.memes
+        
+        //show the tab controller if memes are found
+        if appDelegate.memes.count > 0 {
+            var tabController: UITabBarController
+            tabController = self.storyboard?.instantiateViewControllerWithIdentifier("memeTabView") as! UITabBarController
+            self.presentViewController(tabController, animated: true, completion: nil)
+        }
+    
     }
     
     override func viewWillAppear(animated: Bool) {
