@@ -9,9 +9,30 @@
 import Foundation
 import UIKit
 
-class SentMemesCollectionViewController: UIViewController {
+class SentMemesCollectionViewController: UIViewController, UICollectionViewDataSource {
     
     var memes: [Meme]!
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let object = UIApplication.sharedApplication().delegate
+        let appDelegate = object as! AppDelegate
+        memes = appDelegate.memes
+    }
+    
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return self.memes.count
+    }
+ 
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("MemeCollectionViewCell", forIndexPath: indexPath) as! MemeCollectionViewCell
+        let theMeme = self.memes[indexPath.row]
+        
+        // Set the name and image
+        cell.memeImage?.image = theMeme.memeImage
+        return cell
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,13 +44,6 @@ class SentMemesCollectionViewController: UIViewController {
     func createMeme() {
         self.dismissViewControllerAnimated(true, completion: nil)
      }
-    
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        let object = UIApplication.sharedApplication().delegate
-        let appDelegate = object as! AppDelegate
-        memes = appDelegate.memes
-    }
+
     
 }

@@ -15,7 +15,9 @@ UINavigationControllerDelegate, UITextFieldDelegate {
     @IBOutlet weak var cameraButton: UIBarButtonItem!
     @IBOutlet weak var topTextField: UITextField!
     @IBOutlet weak var bottomTextField: UITextField!
-
+    @IBOutlet weak var TopNavigationBar: UINavigationBar!
+    @IBOutlet weak var BottomToolbar: UIToolbar!
+    
     let memeTextAttributes = [
         NSStrokeColorAttributeName : UIColor.blackColor(),
         NSForegroundColorAttributeName : UIColor.whiteColor(),
@@ -44,6 +46,8 @@ UINavigationControllerDelegate, UITextFieldDelegate {
         
         self.topTextField.autocapitalizationType = UITextAutocapitalizationType.AllCharacters
         self.topTextField.defaultTextAttributes = memeTextAttributes
+        
+        self.bottomTextField.autocapitalizationType = UITextAutocapitalizationType.AllCharacters
         self.bottomTextField.defaultTextAttributes = memeTextAttributes
         
         self.topTextField.delegate = self
@@ -119,7 +123,9 @@ UINavigationControllerDelegate, UITextFieldDelegate {
  
     func generateMemedImage() -> UIImage {
         
-        // TODO: Hide toolbar and navbar
+        // Hide toolbar and navbar
+        self.TopNavigationBar.hidden = true
+        self.BottomToolbar.hidden = true
         
         // Render view to an image
         UIGraphicsBeginImageContext(self.view.frame.size)
@@ -129,7 +135,9 @@ UINavigationControllerDelegate, UITextFieldDelegate {
         UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        // TODO:  Show toolbar and navbar
+        // Show toolbar and navbar
+        self.TopNavigationBar.hidden = false
+        self.BottomToolbar.hidden = false
         
         return memedImage
     }

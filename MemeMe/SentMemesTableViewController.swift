@@ -40,6 +40,7 @@ class SentMemesTableViewController: UITableViewController, UITableViewDataSource
  
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: "memeCell")
+    
         let theMeme = self.memes[indexPath.row]
         
         cell.textLabel?.text = theMeme.textFieldTop! + "..." + theMeme.textFieldBottom!
