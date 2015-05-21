@@ -21,6 +21,7 @@ class SentMemesCollectionViewController: UIViewController, UICollectionViewDataS
         memes = appDelegate.memes
     }
     
+    // Collection View Data Source
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.memes.count
     }
@@ -33,9 +34,21 @@ class SentMemesCollectionViewController: UIViewController, UICollectionViewDataS
         cell.memeImage?.image = theMeme.memeImage
         return cell
     }
+
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath:NSIndexPath)
+    {
+        let detailController = self.storyboard!.instantiateViewControllerWithIdentifier("MemeDetailViewController")! as! MemeDetailViewController
+        
+        let theMeme = self.memes[indexPath.row]
+        
+        //set uiimage view with meme selectged
+        detailController.myMeme = theMeme
+        self.navigationController!.pushViewController(detailController, animated: true)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title="Sent Memes"
         
         let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "createMeme")
         self.navigationItem.rightBarButtonItem = button
@@ -43,7 +56,6 @@ class SentMemesCollectionViewController: UIViewController, UICollectionViewDataS
     
     func createMeme() {
         self.dismissViewControllerAnimated(true, completion: nil)
-     }
-
+    }
     
 }

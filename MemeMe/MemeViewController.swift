@@ -151,6 +151,7 @@ UINavigationControllerDelegate, UITextFieldDelegate {
     }
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
+        //show the image picker
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
             imagePickerView.image = image
             self.dismissViewControllerAnimated(true, completion: nil)
